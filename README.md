@@ -1,32 +1,34 @@
 # Eliciting a Willingness-to-Pay Threshold in Denmark: Analysis of Published Reimbursement Decisions
 
-This repository contains the data and R code underlying the analysis of willingness-to-pay (WTP) thresholds in Denmark, focusing on published reimbursement decisions.
+This repository contains the data and R code underlying the analysis of willingness-to-pay (WTP) thresholds in Denmark, focusing on published reimbursement decisions.  
+**This is an R Project** designed for reproducibility and accompanies a scientific publication.
 
 ## Overview
 
-This project aims to estimate and critically examine WTP thresholds for health interventions in Denmark, utilizing published reimbursement decisions as a data source. The analysis supports transparency and reproducibility for scientific communication and is designed to accompany a scientific publication.
+This project estimates and critically examines WTP thresholds for health interventions in Denmark, using published reimbursement decisions as data. All analysis is performed in R, and the workflow is fully reproducible.
 
 ## Repository Structure
 
-- **/data/**  
-  Contains the core dataset used for the analyses, alongside codings for primary, secondary, and sensitivity analyses.  
-  - `data.RData`
-  - `0. data_prep.R`
-  - `data_ready.RData`
+- **DenmarkWTPAnalysis.Rproj**  
+  The R Project file for use in RStudio.
+
+- **/data/**
+  - `data.RData` – Core dataset.
+  - `0. data_prep.R` – Script for cleaning and preparing the dataset.
+  - `data_ready.RData` – Prepared, analysis-ready data.
 
 - **1. functions.R**  
-  Custom R functions to facilitate and streamline the analysis process (e.g., data cleaning, statistical summaries, plotting).
+  Custom R functions for the analysis (data cleaning, statistics, plotting).
 
 - **2. analysis.R**  
-  The main script to reproduce the core analyses reported in the manuscript. This script loads the data, applies pre-processing, executes the statistical analysis, and generates outputs (tables, figures).
+  Main script to reproduce the analysis and tables/figures in the manuscript.
 
-## How to Reproduce the Analysis
+## Getting Started
 
-1. **Clone the repository:**
-   ```sh
-   git clone https://github.com/annagroot/DenmarkWTPAnalysis.git
-   cd DenmarkWTPAnalysis
-   ```
+1. **Open the R Project**
+
+   - Download or clone this repository.
+   - Open `DenmarkWTPAnalysis.Rproj` in RStudio.
 
 2. **Install R dependencies:**  
    The analysis requires several R packages. Install required packages using:
