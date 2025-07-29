@@ -10,8 +10,9 @@ This project aims to estimate and critically examine WTP thresholds for health i
 
 - **/data/**  
   Contains the core dataset used for the analyses, alongside codings for primary, secondary, and sensitivity analyses.  
-  - `dataset.csv` (example): The main data file (update with actual filename).
-  - `coding_primary.csv`, `coding_secondary.csv`, `coding_sensitivity.csv`: Coding files for respective analyses.
+  - `data.RData`
+  - `0. data_prep.R`
+  - `data_ready.RData`
 
 - **1. functions.R**  
   Custom R functions to facilitate and streamline the analysis process (e.g., data cleaning, statistical summaries, plotting).
@@ -38,7 +39,8 @@ This project aims to estimate and critically examine WTP thresholds for health i
 
 ## Data
 
-These data were derived from the assessments available in the public domain: https://medicinraadet.dk/ 
+All data used in this project are derived from publicly available assessments by the Danish Medicines Council:  
+[https://medicinraadet.dk/](https://medicinraadet.dk/)
 
 ## Citation
 
@@ -48,8 +50,9 @@ If you use this code or data in your research, please cite the associated public
 
 ## Contact
 
-For questions, suggestions, or contributions, please contact [Anna Groot](mailto:anna.grootendorst@gmail.com) or open an issue in this repository.
+For questions, suggestions, or contributions, please contact [Anna Grootendorst](mailto:anna.grootendorst@gmail.com) or open an issue in this repository.
 
 ---
 
 **Note:**
+This repository is intended for scientific and academic purposes. For commercial or policy-related inquiries, please contact the author directly.

@@ -97,7 +97,6 @@ pnplot <- ggplot(data_main, aes(x = patient_numbers, fill = decision_binary_fact
   )
 
 
-
 # Primary analysis ####
 
 # Create logistic regression model with scaled ICER
