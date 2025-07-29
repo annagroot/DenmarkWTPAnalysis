@@ -1,20 +1,13 @@
 
-source("function.R")
-load("data/data.RData")
+source("1. functions.R")
+load("data/data_ready.RData")
 
 library("tidyverse")
 library("pROC")
-library("lubridate")
 library("reshape2")
-library("formattable")
-library("knitr")
-library("markdown")
 library("scales")
-library("kableExtra")
-library("xtable")
-library("ggbreak")
-library("jtools")
-library("cowplot")
+library(ggplot2)
+
 
 options(scipen=999)
 
@@ -22,7 +15,6 @@ options(scipen=999)
 # Outlier analysis ####
 
 recommended_data <- data_main[data_main$decision_binary_factor==1,]
-
 
 # Calculate modified Z-scores for icer_aip
 recommended_data$mod_z_icer <- calculate_modified_z_scores(recommended_data$ICER)
@@ -53,8 +45,6 @@ data_main <- data_main[!(data_main$icer_id %in% outliers$icer_id), ]
 
 
 # Descriptives ####
-
-
 
 ## ICER distribution ####
 
@@ -391,6 +381,23 @@ all_data_analysis <- calculate_optimal_threshold_log(model = model_outliers,
                                                      icer_col     = "ICER_10k",
                                                      decision_col = "decision_binary_factor")
 
+# Create plot without axes first
+plot(all_data_analysis$roc_curve,
+     main        = "ROC Curve",
+     xlab        = "False Positive Rate",
+     ylab        = "True Positive Rate",
+     print.auc   = TRUE,
+     legacy.axes = TRUE,
+     axes        = FALSE)
+
+bc_outliers_log_class_model <- all_data_analysis$logistic_plot +
+  scale_x_log10(breaks = c(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000)) +theme_classic(base_size=14) +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(), # removes all legend titles
+    panel.grid.major= element_line(color = "grey90", size = 0.5)
+  )
+
 ## Optimistic scenario ####
 
 data_optimistic <- data_optimistic %>%
@@ -398,12 +405,8 @@ data_optimistic <- data_optimistic %>%
 
 recommended_data <- data_optimistic[data_optimistic$decision_binary_factor==1,]
 
-
 # Calculate modified Z-scores for icer_aip
 recommended_data$mod_z_icer <- calculate_modified_z_scores(recommended_data$ICER)
-recommended_data$mod_z_bim <- calculate_modified_z_scores(recommended_data$BIM)
-
-outliers_BIM <- recommended_data[abs(recommended_data$mod_z_bim) > outlier_threshold, ]
 
 # If you want to see details about the extreme outliers:
 outliers <- recommended_data[abs(recommended_data$mod_z_icer) > outlier_threshold, ]
@@ -426,6 +429,27 @@ optimistic_analysis_all <- calculate_optimal_threshold_log(model = model_optimis
                                                            icer_col     = "ICER_10k",
                                                            decision_col = "decision_binary_factor")
 
+# Create plot without axes first
+plot(optimistic_analysis_all$roc_curve,
+     main        = "ROC Curve",
+     xlab        = "False Positive Rate",
+     ylab        = "True Positive Rate",
+     print.auc   = TRUE,
+     legacy.axes = TRUE,
+     axes        = FALSE)
+
+optimistic_all_log_class_model <- optimistic_analysis_all$logistic_plot +
+  scale_x_log10(breaks = c(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000)) +theme_classic(base_size=14) +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(), # removes all legend titles
+    panel.grid.major= element_line(color = "grey90", size = 0.5)
+  )
+
+
+
+
+
 ### Optimistic scenario without outliers ####
 
 model_optimistic <- glm(decision_binary_factor ~ ICER_10k,
@@ -436,5 +460,21 @@ optimistic_analysis <- calculate_optimal_threshold_log(model = model_optimistic,
                                                        data  = data_optimistic,
                                                        icer_col     = "ICER_10k",
                                                        decision_col = "decision_binary_factor")
+
+plot(optimistic_analysis$roc_curve,
+     main        = "ROC Curve",
+     xlab        = "False Positive Rate",
+     ylab        = "True Positive Rate",
+     print.auc   = TRUE,
+     legacy.axes = TRUE,
+     axes        = FALSE)
+
+optimistic_log_class_model <- optimistic_analysis$logistic_plot +
+  scale_x_log10(breaks = c(1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000)) +theme_classic(base_size=14) +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_blank(), # removes all legend titles
+    panel.grid.major= element_line(color = "grey90", size = 0.5)
+  )
 
 

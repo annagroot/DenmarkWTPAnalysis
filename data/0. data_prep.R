@@ -1,8 +1,10 @@
+library(dplyr)
+
 #Average conversion rate from 10 June 2024 to 9 June 2025
 eur_to_dkk <- 7.4602
 dkk_to_eur <- 1/eur_to_dkk
 
-load("data.Rdata")
+load("data/data.Rdata")
 
 data_formatted <- data  %>%
   mutate(decision_binary_factor = case_when(
@@ -10,8 +12,8 @@ data_formatted <- data  %>%
     decision == "Recommended" ~ 1,            # Map "Recommended" to 1
     decision == "Partially recommended" ~ 1,  # Map "Partially recommended" to 1
     TRUE ~ NA_real_  # For any other value, assign NA
-  )) %>%   mutate(decision_binary_factor = factor(decision_binary_factor, levels = c(0, 1))) %>%   # Convert the 'decision_binary_factor' to a factor with two levels: 0 and 1
-
+  )) %>%   mutate(decision_binary_factor = factor(decision_binary_factor, levels = c(0, 1))) %>%  # Convert the 'decision_binary_factor' to a factor with two levels: 0 and 1
+  mutate(icer_id = row_number())
 
 data_main <- data_formatted %>%
   filter(include_pessimistic == "Y")
@@ -36,4 +38,4 @@ save(data_main,
      data_optimistic,
      data_onco,
      data_non_onco,
-     file = "data_ready.RData")
+     file = "data/data_ready.RData")

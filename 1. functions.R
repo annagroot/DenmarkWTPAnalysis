@@ -96,14 +96,14 @@ calculate_optimal_threshold_log <- function(model, data, icer_col, decision_col,
     # Add fitted curve
     geom_line(data = pred_data, 
               aes(x = .data[[icer_col]], y = fit),
-              color = "deepskyblue4", size = 1) +
+              color = "deepskyblue4", linewidth = 1) +
     # Add data points with classification colors and shapes
     geom_point(data = plot_data, 
                aes(x = icer, y = predicted_prob, color = classification, shape = classification),
                size = 3.8) +
     # Add threshold line
     geom_hline(yintercept = optimal_threshold, 
-               linetype = "dashed", color = "darkgrey", size = 1) +
+               linetype = "dashed", color = "darkgrey", linewidth = 1) +
     # Add threshold text
     annotate("text",
              x = max(data[[icer_col]]) * 0.5,
@@ -156,4 +156,69 @@ calculate_optimal_threshold_log <- function(model, data, icer_col, decision_col,
     pred_data = pred_data,
     roc_curve = roc_curve
   ))
+}
+
+
+#Updated function to handle grouping variable
+gg_outlier_bin_grouped <- function(x,
+                                   var_name,
+                                   group_var,
+                                   cut_off_floor,
+                                   cut_off_ceiling,
+                                   col = "black",
+                                   fill_regular_0 = "red",
+                                   fill_regular_1 = "green", 
+                                   fill_outliers = "grey",
+                                   binwidth = NULL) {
+  
+  # Filter regular data (between cutoffs)
+  x_regular <- x
+  if (!is.na(cut_off_ceiling)) {
+    x_regular <- x_regular %>% filter(!!sym(var_name) < cut_off_ceiling)
+  }
+  if (!is.na(cut_off_floor)) {
+    x_regular <- x_regular %>% filter(!!sym(var_name) > cut_off_floor)
+  }
+  
+  #Create base plot with grouping
+  plot_obj <- ggplot(x_regular, aes(x = !!sym(var_name), fill = !!sym(group_var))) +
+    geom_histogram(col = col, binwidth = binwidth, position = "dodge") +
+    scale_fill_manual(values = c("0" = fill_regular_0, "1" = fill_regular_1),
+                      name = "Decision")
+  
+  #Handle ceiling outliers
+  if (!is.na(cut_off_ceiling)) {
+    x_to_roll_ceiling <- x %>% 
+      filter(!!sym(var_name) >= cut_off_ceiling) %>%
+      mutate(!!var_name := cut_off_ceiling)
+    
+    if (nrow(x_to_roll_ceiling) > 0) {
+      plot_obj <- plot_obj +
+        geom_histogram(data = x_to_roll_ceiling, 
+                       aes(x = !!sym(var_name)),
+                       fill = fill_outliers, 
+                       col = col,
+                       binwidth = binwidth,
+                       inherit.aes = FALSE)
+    }
+  }
+  
+  #Handle floor outliers
+  if (!is.na(cut_off_floor)) {
+    x_to_roll_floor <- x %>% 
+      filter(!!sym(var_name) <= cut_off_floor) %>%
+      mutate(!!var_name := cut_off_floor)
+    
+    if (nrow(x_to_roll_floor) > 0) {
+      plot_obj <- plot_obj +
+        geom_histogram(data = x_to_roll_floor, 
+                       aes(x = !!sym(var_name)),
+                       fill = fill_outliers, 
+                       col = col,
+                       binwidth = binwidth,
+                       inherit.aes = FALSE)
+    }
+  }
+  
+  return(plot_obj)
 }
