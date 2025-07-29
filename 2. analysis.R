@@ -2,10 +2,10 @@
 source("1. functions.R")
 load("data/data_ready.RData")
 
-library("tidyverse")
-library("pROC")
-library("reshape2")
-library("scales")
+
+library(dplyr)
+library(pROC)
+library(scales)
 library(ggplot2)
 
 
